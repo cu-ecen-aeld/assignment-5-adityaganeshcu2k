@@ -1,38 +1,27 @@
-
 ##############################################################
 #
 # AESD-ASSIGNMENTS
 #
 ##############################################################
-# Reference :- https://chatgpt.com/c/69858bc6-9894-832b-b78c-e0dd389c4d42
-#TODO: Fill up the contents below in order to reference your assignment 3 git contents
-AESD_ASSIGNMENTS_VERSION = '0783367cee11038ea241c8dc3dd326f30c18faaa'
-# Note: Be sure to reference the *ssh* repository URL here (not https) to work properly
-# with ssh keys and the automated build/test system.
-# Your site should start with git@github.com:
-AESD_ASSIGNMENTS_SITE = 'git@github.com:cu-ecen-aeld/assignments-3-and-later-adityaganeshcu2k.git'
+
+AESD_ASSIGNMENTS_VERSION = a6eb6e9457e2b83acf5c2b054f20e2f90a9f94bc
+AESD_ASSIGNMENTS_SITE = git@github.com:cu-ecen-aeld/assignments-3-and-later-adityaganeshcu2k.git
 AESD_ASSIGNMENTS_SITE_METHOD = git
 AESD_ASSIGNMENTS_GIT_SUBMODULES = YES
 
 define AESD_ASSIGNMENTS_BUILD_CMDS
-	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D)/finder-app all
+	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D)/server
 endef
 
-# TODO add your writer, finder and finder-test utilities/scripts to the installation steps below
 define AESD_ASSIGNMENTS_INSTALL_TARGET_CMDS
-	# Install config files
-	$(INSTALL) -d 0755 $(TARGET_DIR)/etc/finder-app/conf
-	$(INSTALL) -m 0644 $(@D)/conf/* $(TARGET_DIR)/etc/finder-app/conf
+	# Install aesdsocket binary
+	$(INSTALL) -D -m 0755 $(@D)/server/aesdsocket \
+		$(TARGET_DIR)/usr/bin
 
-	# Install writer binary
-	$(INSTALL) -d 0755 $(TARGET_DIR)/usr/bin
-	$(INSTALL) -m 0755 $(@D)/finder-app/writer $(TARGET_DIR)/usr/bin
-
-	# Install scripts
-	$(INSTALL) -m 0755 $(@D)/finder-app/finder.sh $(TARGET_DIR)/usr/bin
-	$(INSTALL) -m 0755 $(@D)/finder-app/finder-test.sh $(TARGET_DIR)/usr/bin
-	#$(INSTALL) -m 0755 $(@D)/assignment-autotest/test/assignment4/tester.sh $(TARGET_DIR)/usr/bin
+	# Install startup script
+	$(INSTALL) -D -m 0755 $(@D)/server/aesdsocket-start-stop.sh \
+		$(TARGET_DIR)/etc/init.d/S99aesdsocket
 endef
-
 
 $(eval $(generic-package))
+
